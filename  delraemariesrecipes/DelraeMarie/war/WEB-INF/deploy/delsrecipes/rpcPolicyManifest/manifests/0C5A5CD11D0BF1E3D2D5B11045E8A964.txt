@@ -1,0 +1,2 @@
+serviceClass: com.pope.client.RecipeService
+path: 07B69CE96EF61BF8D00C3A31FB286112.gwt.rpc

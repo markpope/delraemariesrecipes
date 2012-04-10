@@ -1,0 +1,2 @@
+serviceClass: com.pope.client.LoginService
+path: 580F8171D6B4ACA88BCC01C76E08EBE6.gwt.rpc
