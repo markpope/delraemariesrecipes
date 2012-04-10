@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>DelraeMarie.html</welcome-file>
+	</welcome-file-list>
+
+
+
+	<servlet>
+		<servlet-name>loginService</servlet-name>
+		<servlet-class>com.pope.server.LoginServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>loginService</servlet-name>
+		<url-pattern>/delraemarie/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>recipeService</servlet-name>
+		<servlet-class>com.pope.server.RecipeServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>recipeService</servlet-name>
+		<url-pattern>/delraemarie/recipe</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

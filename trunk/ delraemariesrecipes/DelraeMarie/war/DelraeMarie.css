@@ -1,0 +1,111 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+/** h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+*/
+
+h1 {
+	border:0;
+	width: 649px;
+    height: 110px;
+}
+
+.Button {
+  display: block;
+  font-size: 10pt;
+}
+
+.grocery {
+  display: block;
+  font-size: 8pt;
+}
+
+.hyperlink {
+  font-size: 10pt;
+	}
+	
+.headerPanel {
+  background-color: #ced9ff;
+  margin: 5px;
+  padding: 5px 5px;
+  border-spacing: 5px 5px;
+	}
+	
+.recipeMgmtPanel {
+    padding: 0px 5px;
+}
+	
+.recipeNavPanel {
+    padding: 0px 10px;
+	horizontal-align: right;
+}
+	
+.recipeTableHeader {
+  background-color: #e0ecff;
+	
+}
+
+.displayLabelLabel {
+  font-size: 12;
+  font-weight: bold;
+}
+	
+.displayLabelData {
+  font-size: 12;
+}
+	
+	/*
+	 * Ingredients and Directions Label
+	 */
+.displayIngDirLabel {
+  font-size: 14;
+  font-weight: bold;
+  height: 40px;
+  padding: 10px 10px;
+}
+	
+.displayIngDirData {
+  font-size: 12;
+  padding: 0px 20px;
+}
+	 
+.displayRecipeTitle {
+  font-size: 24;  text-align: center;
+}
+  
+.gwt-DockPanel {
+  background-color: orange;
+    border-color: orange;
+    color: orange;
+}
+.dock {
+  background-color: #ced9ff;
+	}
+	
+.gwt-Button {
+  margin: 0;
+  padding: 3px 5px;
+  text-decoration: none;
+  font-size: small;
+  cursor: pointer;
+  cursor: hand;
+  background: url("images/hborder.png") repeat-x 0px -27px;
+  border: 1px outset #ccc;
+}
+
+.gwt-HorizontalPanel {
+  color: red;
+  backgroundcolor: yellow;
+	}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
