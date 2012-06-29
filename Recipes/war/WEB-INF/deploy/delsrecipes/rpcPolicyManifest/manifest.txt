@@ -1,0 +1,4 @@
+# Module delsrecipes
+# RPC service class, partial path of RPC policy file
+com.pope.client.LoginService, 580F8171D6B4ACA88BCC01C76E08EBE6.gwt.rpc
+com.pope.client.RecipeService, B02D11CA58D48078214B9B98604C6D67.gwt.rpc
