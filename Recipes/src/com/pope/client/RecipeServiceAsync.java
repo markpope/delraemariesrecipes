@@ -12,4 +12,5 @@ public interface RecipeServiceAsync {
   public void getRecipesBySearch(int pBegRecipe, int pEndRecipe, String pSearch, AsyncCallback<RecipeTO[]> async);
   public void getRecipe(String pRecipe, AsyncCallback<RecipeTO> async);
   public void getRecipesForExport(AsyncCallback<String[]> async);
+  public void importRecipes(String pXML, AsyncCallback async);
 }

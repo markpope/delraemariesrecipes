@@ -1,6 +1,6 @@
 package com.pope.server;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -24,13 +25,10 @@ import com.pope.client.RecipeService;
 import com.pope.client.RecipeTO;
 import com.pope.server.jaxb.Recipes;
 
-public class RecipeServiceImpl extends RemoteServiceServlet implements
-		RecipeService {
+public class RecipeServiceImpl extends RemoteServiceServlet implements RecipeService {
 
-	private static final Logger LOG = Logger.getLogger(RecipeServiceImpl.class
-			.getName());
-	private static final PersistenceManagerFactory PMF = JDOHelper
-			.getPersistenceManagerFactory("transactions-optional");
+	private static final Logger LOG = Logger.getLogger(RecipeServiceImpl.class.getName());
+	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
 	public void addRecipe(RecipeTO pRecipe) throws NotLoggedInException {
 		checkLoggedIn();
@@ -63,6 +61,7 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 			recipe.setIngredients(pRecipe.getIngredients());
 			recipe.setOccasion(pRecipe.getOccasion());
 			recipe.setServes(pRecipe.getServes());
+			pm.makePersistent(recipe);
 		} finally {
 			pm.close();
 		}
@@ -119,16 +118,12 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 	 * @return
 	 */
 	private RecipeTO convert(Recipe pRecipe) {
-		return new RecipeTO(pRecipe.getId(), pRecipe.getName(),
-				pRecipe.getCategory(), pRecipe.getCuisine(),
-				pRecipe.getOccasion(), pRecipe.getServes(),
-				pRecipe.getIngredients(), pRecipe.getDirections());
+		return new RecipeTO(pRecipe.getId(), pRecipe.getName(), pRecipe.getCategory(), pRecipe.getCuisine(), pRecipe.getOccasion(), pRecipe.getServes(), pRecipe.getIngredients(),
+				pRecipe.getDirections());
 	}
 
-	public RecipeTO[] getRecipes(int pBegRecipe, int pEndRecipe)
-			throws NotLoggedInException {
-		System.out
-				.println("getRecipes(" + pBegRecipe + ", " + pEndRecipe + ")");
+	public RecipeTO[] getRecipes(int pBegRecipe, int pEndRecipe) throws NotLoggedInException {
+		System.out.println("getRecipes(" + pBegRecipe + ", " + pEndRecipe + ")");
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		List<RecipeTO> recipes = new ArrayList<RecipeTO>();
@@ -197,8 +192,7 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 		return retVal;
 	}
 
-	public RecipeTO[] getRecipesByCategory(int pBegRecipe, int pEndRecipe,
-			String pCategory) throws NotLoggedInException {
+	public RecipeTO[] getRecipesByCategory(int pBegRecipe, int pEndRecipe, String pCategory) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		List<RecipeTO> recipes = new ArrayList<RecipeTO>();
@@ -218,8 +212,7 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 		return recipes.toArray(new RecipeTO[0]);
 	}
 
-	public RecipeTO[] getRecipesByCuisine(int pBegRecipe, int pEndRecipe,
-			String pCuisine) throws NotLoggedInException {
+	public RecipeTO[] getRecipesByCuisine(int pBegRecipe, int pEndRecipe, String pCuisine) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		List<RecipeTO> recipes = new ArrayList<RecipeTO>();
@@ -239,8 +232,7 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 		return recipes.toArray(new RecipeTO[0]);
 	}
 
-	public RecipeTO[] getRecipesBySearch(int pBegRecipe, int pEndRecipe,
-			String pSearch) throws NotLoggedInException {
+	public RecipeTO[] getRecipesBySearch(int pBegRecipe, int pEndRecipe, String pSearch) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = getPersistenceManager();
 		List<RecipeTO> recipes = new ArrayList<RecipeTO>();
@@ -252,8 +244,7 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 				StringTokenizer st = new StringTokenizer(pSearch);
 				while (st.hasMoreTokens()) {
 					String token = st.nextToken();
-					if (recipe.getIngredients().contains(token)
-							|| recipe.getDirections().contains(token)) {
+					if (recipe.getIngredients().contains(token) || recipe.getDirections().contains(token)) {
 						recipes.add(convert(recipe));
 						break;
 					}
@@ -280,4 +271,36 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements
 		return PMF.getPersistenceManager();
 	}
 
+	@Override
+	public void importRecipes(String pXML) throws NotLoggedInException {
+
+		PersistenceManager pm = getPersistenceManager();
+
+		try {
+			JAXBContext context = JAXBContext.newInstance(Recipes.class);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			Recipes recipes = (Recipes) unmarshaller.unmarshal(new ByteArrayInputStream(pXML.getBytes()));
+			List<com.pope.server.jaxb.Recipe> recipesJAXB = recipes.getRecipes();
+			for (com.pope.server.jaxb.Recipe recipe : recipesJAXB) {
+				pm.makePersistent(convert(recipe));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			pm.close();
+		}
+	}
+
+	private Recipe convert(com.pope.server.jaxb.Recipe pRecipe) {
+		Recipe retVal = new Recipe();
+		retVal.setCategory(pRecipe.getCategory());
+		retVal.setCuisine(pRecipe.getCuisine());
+		retVal.setOccasion(pRecipe.getOccasion());
+		retVal.setServes(pRecipe.getServes());
+		retVal.setName(pRecipe.getName());
+		retVal.setIngredients(pRecipe.getIngredients());
+		retVal.setDirections(pRecipe.getDirections());
+		
+		return retVal;
+	}
 }

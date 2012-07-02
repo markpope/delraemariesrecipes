@@ -11,12 +11,12 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ExportRecipesDialogBox extends DialogBox {
+public class ImportRecipesDialogBox extends DialogBox {
 	
 	private RecipeServiceAsync recipeService = GWT.create(RecipeService.class);
 	private TextArea list = new TextArea();
 
-	public ExportRecipesDialogBox() {
+	public ImportRecipesDialogBox() {
 		init();
 	}
 
@@ -26,7 +26,7 @@ public class ExportRecipesDialogBox extends DialogBox {
 		setModal(true);
 		setAnimationEnabled(true);
 		ensureDebugId("cwDialogBox");
-		setText("Recipes as XML");
+		setText("Import Recipes as XML");
 
 		list.setWidth("800px");
 		list.setHeight("500px");
@@ -42,30 +42,25 @@ public class ExportRecipesDialogBox extends DialogBox {
 			}
 		});
 
-		Button printButton = new Button("Print", new ClickHandler() {
+		Button importButton = new Button("Import", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Window.print();
+				recipeService.importRecipes(list.getText(), new ImportRecipesAsyncCallback());
 			}
 		});
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-		buttonPanel.add(printButton);
+		buttonPanel.add(importButton);
 		buttonPanel.add(closeButton);
 		dialogContents.add(buttonPanel);
 		
-	}
-	
-	public void loadRecipes() {
-		list.setText("");
-		recipeService.getRecipesForExport(new LoadExportRecipesAsyncCallback());
 	}
 
 	private void add(String pItems) {
 		list.setText(list.getText() + "\n" + pItems);
 	}
 	
-	private class LoadExportRecipesAsyncCallback implements AsyncCallback<String[]> {
+	private class ImportRecipesAsyncCallback implements AsyncCallback {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -73,10 +68,8 @@ public class ExportRecipesDialogBox extends DialogBox {
 		}
 
 		@Override
-		public void onSuccess(String[] result) {
-			for (String string : result) {
-				add(string);
-			}
+		public void onSuccess(Object result) {
+			
 		}
 	}
 }

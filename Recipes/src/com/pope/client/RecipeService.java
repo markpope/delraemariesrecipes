@@ -14,4 +14,5 @@ public interface RecipeService extends RemoteService {
   public RecipeTO[] getRecipesByCuisine(int pBegRecipe, int pEndRecipe, String pCuisine) throws NotLoggedInException;
   public RecipeTO[] getRecipesBySearch(int pBegRecipe, int pEndRecipe, String pSearch) throws NotLoggedInException;
   public String[] getRecipesForExport() throws NotLoggedInException;
+  public void importRecipes(String pXML) throws NotLoggedInException;
 }

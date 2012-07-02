@@ -67,6 +67,10 @@ public class Recipe implements Serializable {
 	public String getName() {
 		return name;
 	}
+	
+	public void setName(String pName) {
+		name = pName;
+	}
 
 	public String getCuisine() {
 		return cuisine;

@@ -5,11 +5,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -24,14 +24,15 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 	private DisplayLabel categoryLabel;
 	private DisplayLabel cuisineLabel;
 	private DisplayLabel servesLabel;
-	private Label ingredientsData;
-	private Label directionsData;
+	private HTML ingredientsData;
+	private HTML directionsData;
 	private Label ingredientsLabel;
 	private Label directionsLabel;
 	private LoginInfo loginInfo;
 	protected RecipeTO recipe;
 	private static GroceryListDialogBox groceryList = new GroceryListDialogBox();
 	private static ExportRecipesDialogBox exportRecipes = new ExportRecipesDialogBox();
+	private static ImportRecipesDialogBox importRecipes = new ImportRecipesDialogBox();
 
 	public DisplayRecipe(LoginInfo pLoginInfo) {
 		System.out.println("I'm HERE!");
@@ -83,8 +84,12 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 		HorizontalPanel headerPanel = new HorizontalPanel();
 		headerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		headerPanel.setSpacing(1);
+		if (loginInfo.isAdmin()) {
+			headerPanel.setWidth("200");
+		} else {
+			headerPanel.setWidth("100%");
+		}
 		headerPanel.setStyleName("headerPanel");
-		headerPanel.setWidth("100%");
 
 		Button print = new Button("Print", new ClickHandler() {
 			public void onClick(ClickEvent sender) {
@@ -95,7 +100,7 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 		headerPanel.add(print);
 
 		if (loginInfo.isAdmin()) {
-			Button edit = new Button("Edit", new ClickHandler() {
+			Button editButton = new Button("Edit", new ClickHandler() {
 				public void onClick(ClickEvent sender) {
 					RecipeDialogBox recipeBox = new RecipeDialogBox(recipe);
 					recipeBox.center();
@@ -104,9 +109,9 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 				}
 			});
 			print.setStyleName("Button");
-			headerPanel.add(edit);
+			headerPanel.add(editButton);
 
-			Button delete = new Button("Delete", new ClickHandler() {
+			Button deleteButton = new Button("Delete", new ClickHandler() {
 				public void onClick(ClickEvent sender) {
 					recipeService.removeRecipe(recipe,
 							new AsyncCallback<Void>() {
@@ -123,26 +128,27 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 				}
 			});
 			print.setStyleName("Button");
-			headerPanel.add(delete);
+			headerPanel.add(deleteButton);
 
-			Button export = new Button("Export", new ClickHandler() {
+			Button exportButton = new Button("Export", new ClickHandler() {
 				public void onClick(ClickEvent sender) {
 					exportRecipes.loadRecipes();
 					exportRecipes.show();
-					// recipeService.getRecipesForExport(
-					// new AsyncCallback<String[]>() {
-					// public void onFailure(Throwable error) {
-					// }
-					//
-					// @Override
-					// public void onSuccess(String[] result) {
-					// }
-					// });
-
 				}
 			});
 			print.setStyleName("Button");
-			headerPanel.add(export);
+			headerPanel.add(exportButton);
+
+			print.setStyleName("Button");
+			headerPanel.add(deleteButton);
+
+			Button importButton = new Button("Import", new ClickHandler() {
+				public void onClick(ClickEvent sender) {
+					importRecipes.show();
+				}
+			});
+			print.setStyleName("Button");
+			headerPanel.add(importButton);
 		}
 
 		verPanel.add(headerPanel);
@@ -175,8 +181,8 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 		ingredientsLabel.setStyleName("displayIngDirLabel");
 		directionsLabel.setStyleName("displayIngDirLabel");
 
-		ingredientsData = new Label();
-		directionsData = new Label();
+		ingredientsData = new HTML();
+		directionsData = new HTML();
 		ingredientsData.setStyleName("displayIngDirData");
 		directionsData.setStyleName("displayIngDirData");
 
@@ -210,8 +216,12 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 				cuisineLabel.setData(pRecipe.getCuisine());
 				categoryLabel.setData(pRecipe.getCategory());
 				servesLabel.setData(pRecipe.getServes());
-				ingredientsData.setText(pRecipe.getIngredients());
-				directionsData.setText(pRecipe.getDirections());
+				ingredientsData.setHTML("<div id='ingredients'>"
+						+ pRecipe.getIngredients().replace("\n", "<br/>")
+						+ "</div>");
+				directionsData.setHTML("<div id='ingredients'>"
+						+ pRecipe.getDirections().replace("\n", "<p>")
+						+ "</div>");
 			}
 		});
 	}
