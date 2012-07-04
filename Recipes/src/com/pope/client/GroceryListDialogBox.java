@@ -2,6 +2,7 @@ package com.pope.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -24,7 +25,7 @@ public class GroceryListDialogBox extends DialogBox {
 		setModal(true);
 		setAnimationEnabled(true);
 		ensureDebugId("cwDialogBox");
-		setText("XML Recipes");
+		setText("Groceery List");
 
 		list.setWidth("800px");
 		list.setHeight("500px");
@@ -39,10 +40,16 @@ public class GroceryListDialogBox extends DialogBox {
 				hide();
 			}
 		});
-
+		
+		Button printButton = new Button("Print", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Window.print();
+			}
+		});
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+		buttonPanel.add(printButton);
 		buttonPanel.add(closeButton);
 		dialogContents.add(buttonPanel);
 		

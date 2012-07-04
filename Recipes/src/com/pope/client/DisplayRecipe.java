@@ -35,7 +35,6 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 	private static ImportRecipesDialogBox importRecipes = new ImportRecipesDialogBox();
 
 	public DisplayRecipe(LoginInfo pLoginInfo) {
-		System.out.println("I'm HERE!");
 		loginInfo = pLoginInfo;
 		init();
 	}
@@ -45,7 +44,6 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 		VerticalPanel verPanel = new VerticalPanel();
 		this.add(verPanel);
 		this.setSize("100%", "100%");
-		System.out.println("IN INIT");
 
 		// if (loginInfo.isAdmin()) {
 		addKeyPressHandler(new KeyPressHandler() {
@@ -61,17 +59,15 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 					// recipeBox.show();
 				} else if (event.getCharCode() == 4) {
 					GWT.log("Got a delete <Alt>+L command", null);
-					recipeService.removeRecipe(recipe,
-							new AsyncCallback<Void>() {
-								public void onFailure(Throwable error) {
-								}
+					recipeService.removeRecipe(recipe, new AsyncCallback<Void>() {
+						public void onFailure(Throwable error) {
+						}
 
-								@Override
-								public void onSuccess(Void result) {
-									GWT.log("deleted recipe "
-											+ recipe.getName(), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void result) {
+							GWT.log("deleted recipe " + recipe.getName(), null);
+						}
+					});
 				} else {
 					System.out.println("Got a " + event.getCharCode());
 				}
@@ -113,17 +109,15 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 
 			Button deleteButton = new Button("Delete", new ClickHandler() {
 				public void onClick(ClickEvent sender) {
-					recipeService.removeRecipe(recipe,
-							new AsyncCallback<Void>() {
-								public void onFailure(Throwable error) {
-								}
+					recipeService.removeRecipe(recipe, new AsyncCallback<Void>() {
+						public void onFailure(Throwable error) {
+						}
 
-								@Override
-								public void onSuccess(Void result) {
-									GWT.log("deleted recipe "
-											+ recipe.getName(), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void result) {
+							GWT.log("deleted recipe " + recipe.getName(), null);
+						}
+					});
 
 				}
 			});
@@ -159,8 +153,7 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 
 		HorizontalPanel optionsPanel = new HorizontalPanel();
 		optionsPanel.setWidth("80%");
-		optionsPanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		optionsPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		categoryLabel = new DisplayLabel("Category: ");
 		cuisineLabel = new DisplayLabel("Cusine: ");
 		occasionLabel = new DisplayLabel("Occasion: ");
@@ -171,8 +164,7 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 		optionsPanel.add(servesLabel);
 		verPanel.add(optionsPanel);
 		verPanel.setCellHeight(optionsPanel, "30px");
-		verPanel.setCellHorizontalAlignment(optionsPanel,
-				HasHorizontalAlignment.ALIGN_CENTER);
+		verPanel.setCellHorizontalAlignment(optionsPanel, HasHorizontalAlignment.ALIGN_CENTER);
 
 		VerticalPanel ingredientsPanel = new VerticalPanel();
 
@@ -203,7 +195,6 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 	}
 
 	public void display(String pRecipe) {
-		GWT.log("Display Recipe: " + pRecipe, null);
 		recipeService.getRecipe(pRecipe, new AsyncCallback<RecipeTO>() {
 			public void onFailure(Throwable error) {
 			}
@@ -216,12 +207,8 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 				cuisineLabel.setData(pRecipe.getCuisine());
 				categoryLabel.setData(pRecipe.getCategory());
 				servesLabel.setData(pRecipe.getServes());
-				ingredientsData.setHTML("<div id='ingredients'>"
-						+ pRecipe.getIngredients().replace("\n", "<br/>")
-						+ "</div>");
-				directionsData.setHTML("<div id='ingredients'>"
-						+ pRecipe.getDirections().replace("\n", "<p>")
-						+ "</div>");
+				ingredientsData.setHTML("<div id='ingredients'>" + pRecipe.getIngredients().replace("\n", "<br/>") + "</div>");
+				directionsData.setHTML("<div id='ingredients'>" + pRecipe.getDirections().replace("\n", "<p>") + "</div>");
 			}
 		});
 	}
@@ -229,7 +216,7 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		groceryList.add("\n-------  " + title.getText() + "  -------\n");
-		groceryList.add(ingredientsData.getText());
+		groceryList.add(recipe.getIngredients());
 		groceryList.show();
 
 	}
