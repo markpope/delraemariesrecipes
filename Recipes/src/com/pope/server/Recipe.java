@@ -34,6 +34,8 @@ public class Recipe implements Serializable {
 	private Text directions;
 	@Persistent
 	private Date created;
+	@Persistent
+	private boolean isDeleted=false;
 
 	public Recipe() {
 		this.created = new Date();
@@ -126,6 +128,14 @@ public class Recipe implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 }

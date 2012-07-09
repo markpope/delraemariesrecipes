@@ -79,7 +79,8 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements RecipeSer
 			List<Recipe> qRecipes = (List<Recipe>) q.execute(pRecipe.getName());
 			for (Recipe recipe : qRecipes) {
 				GWT.log("Deleting " + recipe.getName(), null);
-				pm.deletePersistent(recipe);
+				recipe.setDeleted(true);
+				pm.makePersistent(recipe);
 			}
 		} finally {
 			pm.close();
@@ -129,10 +130,15 @@ public class RecipeServiceImpl extends RemoteServiceServlet implements RecipeSer
 		List<RecipeTO> recipes = new ArrayList<RecipeTO>();
 		try {
 			Query q = pm.newQuery(Recipe.class);
+//			q.setFilter("isDeleted == false");
+//			q.declareParameters("boolean isDeleted");
 			q.setOrdering("name");
 			q.setRange(pBegRecipe, pEndRecipe);
 			List<Recipe> qRecipes = (List<Recipe>) q.execute();
 			for (Recipe recipe : qRecipes) {
+				if (recipe.isDeleted()) {
+					continue;
+				}
 				recipes.add(convert(recipe));
 			}
 		} finally {

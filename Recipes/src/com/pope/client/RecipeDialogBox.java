@@ -6,8 +6,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class RecipeDialogBox extends DialogBox {
 
@@ -30,6 +33,7 @@ public class RecipeDialogBox extends DialogBox {
 	private ListBox occasion = new ListBox();
 	private ListBox serves = new ListBox();
 	private boolean recipeExists = false;
+	private DialogBox warningBox = new DialogBox(true);
 
 	public RecipeDialogBox() {
 		init();
@@ -175,20 +179,37 @@ public class RecipeDialogBox extends DialogBox {
 
 		Button createButton = new Button("Create Recipe", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				GWT.log("Creating Recipe: " + nameTextBox.getText(), null);
-				addRecipe(new RecipeTO(nameTextBox.getText(), category.getValue(category.getSelectedIndex()), cuisine
-						.getValue(cuisine.getSelectedIndex()), occasion.getValue(occasion.getSelectedIndex()), serves
-						.getValue(serves.getSelectedIndex()), ingredients.getText(), directions.getText()));
-				hide();
+
+				if (nameTextBox.getText().length() == 0) {
+					VerticalPanel dialogBoxContents = new VerticalPanel();
+					dialogBoxContents.add(new HTML("Name cannot be blank"));
+					warningBox.setText("Error");
+					warningBox.setWidget(dialogBoxContents);
+					
+					ClickHandler listener = new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+				            warningBox.hide();
+						}
+					};
+					
+					Button closeButton = new Button("Close", listener);
+					dialogBoxContents.add(closeButton);
+					
+					warningBox.center();
+
+				} else {
+					addRecipe(new RecipeTO(nameTextBox.getText(), category.getValue(category.getSelectedIndex()), cuisine.getValue(cuisine.getSelectedIndex()), occasion.getValue(occasion
+							.getSelectedIndex()), serves.getValue(serves.getSelectedIndex()), ingredients.getText(), directions.getText()));
+					hide();
+				}
 			}
 		});
 
 		Button saveButton = new Button("Save Recipe", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				GWT.log("Updating Recipe: " + nameTextBox.getText(), null);
-				updateRecipe(new RecipeTO(nameTextBox.getText(), category.getValue(category.getSelectedIndex()),
-						cuisine.getValue(cuisine.getSelectedIndex()), occasion.getValue(occasion.getSelectedIndex()),
-						serves.getValue(serves.getSelectedIndex()), ingredients.getText(), directions.getText()));
+				updateRecipe(new RecipeTO(nameTextBox.getText(), category.getValue(category.getSelectedIndex()), cuisine.getValue(cuisine.getSelectedIndex()), occasion.getValue(occasion
+						.getSelectedIndex()), serves.getValue(serves.getSelectedIndex()), ingredients.getText(), directions.getText()));
 				hide();
 				mainView.loadRecipes();
 				RootPanel.get("stockList").remove(0);
@@ -199,7 +220,7 @@ public class RecipeDialogBox extends DialogBox {
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		
+
 		// Display update or create button if recipe exists and is being edited
 		if (recipeExists) {
 			buttonPanel.add(saveButton);

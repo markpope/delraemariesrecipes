@@ -3,9 +3,7 @@ package com.pope.client;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import javax.validation.constraints.NotNull;
 
 
 
@@ -26,7 +24,7 @@ public class RecipeTO implements Serializable {
 
 	}
 
-	public RecipeTO(String pName, String pCategory, String pCuisine,
+	public RecipeTO(@NotNull String pName, String pCategory, String pCuisine,
 			String pOccasion, String pServes, String pIngredients, String pDirections) {
 		this();
 		this.name = pName.substring(0, 1).toUpperCase() + pName.substring(1);
@@ -38,7 +36,7 @@ public class RecipeTO implements Serializable {
 		this.directions = pDirections;
 	}
 
-	public RecipeTO(Long pId, String pName, String pCategory, String pCuisine,
+	public RecipeTO(Long pId, @NotNull String pName, String pCategory, String pCuisine,
 			String pOccasion, String pServes, String pIngredients, String pDirections) {
 		this();
 		this.id = pId;

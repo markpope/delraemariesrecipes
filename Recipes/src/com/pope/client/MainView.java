@@ -28,7 +28,7 @@ public class MainView extends VerticalPanel implements ClickHandler {
 	private String navTag = "recipes";
 	private int displayRange = 0;
 	private int recipesReturned = 0;
-	private static final int DISPALY_RANGE = 4;
+	private static final int DISPALY_RANGE = 50;
 	private Hyperlink previous;
 	private Label range;
 	private Hyperlink next;
@@ -73,20 +73,20 @@ public class MainView extends VerticalPanel implements ClickHandler {
 		searchText.setStyleName("Button");
 		recipeMgmtPanel.add(searchText);
 
-		AbsolutePanel recipeNavPanel = new AbsolutePanel();
+		HorizontalPanel recipeNavPanel = new HorizontalPanel();
 		recipeNavPanel.setStyleName(".gwt-DockPanel");
-		recipeNavPanel.setSize("220px", "25px");
+		//recipeNavPanel.setSize("220px", "25px");
 		previous = new Hyperlink("< Previous", "recipes?view=" + displayRange);
 		previous.setStyleName("hyperlink");
 		previous.setVisible(false);
-		range = new Label("" + (displayRange + 1) + "-" + (displayRange + DISPALY_RANGE) + " recipes");
+		range = new Label(" " + (displayRange + 1) + "-" + (displayRange + DISPALY_RANGE) + " recipes ");
 		range.setStyleName("hyperlink");
 		next = new Hyperlink("Next >", "recipes?view=" + (displayRange + DISPALY_RANGE));
 		next.setStyleName("hyperlink");
 		recipeNavPanel.setStyleName("recipeNavPanel");
-		recipeNavPanel.add(previous, 0, 0);
-		recipeNavPanel.add(range, 80, 0);
-		recipeNavPanel.add(next, 150, 0);
+		recipeNavPanel.add(previous);//, 0, 0);
+		recipeNavPanel.add(range);//, 40, 0);
+		recipeNavPanel.add(next);//, 150, 0);
 
 		headerPanel.add(recipeMgmtPanel);
 		headerPanel.add(recipeNavPanel);
@@ -121,7 +121,6 @@ public class MainView extends VerticalPanel implements ClickHandler {
 	 * @param pToken
 	 */
 	void loadRecipes(String pToken) {
-		GWT.log("MainView loadRecipes(" + pToken + ")", null);
 		try {
 			if (pToken == null) {
 				recipeService.getRecipes(displayRange, (displayRange + DISPALY_RANGE), new LoadRecipesAsyncCallback());

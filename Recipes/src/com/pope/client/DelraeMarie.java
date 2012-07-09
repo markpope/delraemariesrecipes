@@ -43,7 +43,7 @@ public class DelraeMarie implements EntryPoint, ValueChangeHandler {
 						if (mainView == null) {
 							mainView = new MainView(loginInfo);
 							if (displayRecipe == null) {
-								displayRecipe = new DisplayRecipe(loginInfo);
+								displayRecipe = new DisplayRecipe(loginInfo, mainView);
 							}
 							mainView.loadRecipes(null);
 						}

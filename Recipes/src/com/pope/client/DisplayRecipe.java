@@ -30,12 +30,14 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 	private Label directionsLabel;
 	private LoginInfo loginInfo;
 	protected RecipeTO recipe;
+	private MainView mainView;
 	private static GroceryListDialogBox groceryList = new GroceryListDialogBox();
 	private static ExportRecipesDialogBox exportRecipes = new ExportRecipesDialogBox();
 	private static ImportRecipesDialogBox importRecipes = new ImportRecipesDialogBox();
 
-	public DisplayRecipe(LoginInfo pLoginInfo) {
+	public DisplayRecipe(LoginInfo pLoginInfo, MainView pMainView) {
 		loginInfo = pLoginInfo;
+		mainView = pMainView;
 		init();
 	}
 
@@ -118,7 +120,7 @@ public class DisplayRecipe extends FocusPanel implements ClickHandler {
 							GWT.log("deleted recipe " + recipe.getName(), null);
 						}
 					});
-
+					mainView.onClick(null);
 				}
 			});
 			print.setStyleName("Button");
